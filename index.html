@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cuprite — Long-form YouTube video editor</title>
+<meta name="description" content="Long-form YouTube video editor. Premiere Pro and After Effects. Available worldwide, remotely.">
+<meta name="theme-color" content="#F6F5F1">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cupritemov.com/">
+<meta property="og:title" content="cuprite — Long-form YouTube video editor">
+<meta property="og:description" content="Premiere Pro and After Effects. Available worldwide, remotely.">
+<meta property="og:image" content="https://i.ytimg.com/vi/yTYNCaPAHHg/maxresdefault.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%232447E8'/%3E%3Ctext x='32' y='44' font-family='Helvetica,Arial,sans-serif' font-size='38' font-weight='700' text-anchor='middle' fill='%23F6F5F1'%3Ec%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --milk: #F6F5F1;
+    --ink: #14151A;
+    --muted: #62656E;
+    --line: #DDDBD3;
+    --blue: #2447E8;
+    --violet: #5A4FE3;
+    --tint: #E1E4FB;
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Helvetica Neue", Arial, sans-serif;
+    --pad: clamp(20px, 4vw, 48px);
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    background: var(--milk);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: 17px;
+    line-height: 1.5;
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection { background: var(--tint); }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--pad); }
+
+  /* Header */
+  header .wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 72px;
+  }
+  .logo { font-weight: 600; font-size: 20px; letter-spacing: -0.035em; }
+  nav { display: flex; gap: 28px; font-size: 15px; color: var(--muted); }
+  nav a { transition: color .2s; }
+  nav a:hover { color: var(--blue); }
+
+  /* Hero */
+  .hero { padding: clamp(48px, 9vw, 120px) 0 clamp(40px, 6vw, 72px); }
+  .hero h1 {
+    font-weight: 600;
+    font-size: clamp(40px, 7.2vw, 96px);
+    line-height: 1.04;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+  .hero .lead {
+    margin-top: 28px;
+    max-width: 34em;
+    color: var(--muted);
+    font-size: clamp(18px, 2vw, 22px);
+    line-height: 1.45;
+  }
+  .hero .cta {
+    display: inline-block;
+    margin-top: 32px;
+    padding-bottom: 2px;
+    color: var(--blue);
+    font-weight: 500;
+    border-bottom: 1px solid currentColor;
+    transition: color .2s;
+  }
+  .hero .cta:hover { color: var(--violet); }
+
+  /* The one page-load moment */
+  .hero > * { animation: rise .9s cubic-bezier(.2, .7, .2, 1) both; }
+  .hero > *:nth-child(2) { animation-delay: .08s; }
+  .hero > *:nth-child(3) { animation-delay: .16s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+
+  /* Sections */
+  section { padding: clamp(32px, 5vw, 72px) 0; }
+  h2 {
+    font-weight: 600;
+    font-size: clamp(24px, 3vw, 34px);
+    letter-spacing: -0.035em;
+    margin-bottom: 28px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(32px, 4vw, 52px) clamp(16px, 2vw, 28px);
+  }
+  .grid.lead-first > .v:first-child { grid-column: 1 / -1; }
+  .grid.lead-first > .v:last-child:nth-child(even) { grid-column: 1 / -1; }
+  .grid:not(.lead-first) > .v:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+  /* Video card */
+  .frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: #E6E4DD;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .frame button {
+    all: unset;
+    position: absolute;
+    inset: 0;
+    display: block;
+    cursor: pointer;
+  }
+  .frame button:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+  .frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 72px;
+    height: 72px;
+    margin: -36px 0 0 -36px;
+    border-radius: 50%;
+    background: rgba(246, 245, 241, .94);
+    display: grid;
+    place-items: center;
+    transition: transform .25s ease;
+  }
+  .play svg { width: 24px; height: 24px; margin-left: 4px; fill: var(--blue); }
+  .frame button:hover .play { transform: scale(1.07); }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 4px 16px;
+    margin-top: 14px;
+  }
+  .meta .t { font-weight: 500; font-size: 17px; letter-spacing: -0.02em; }
+  .meta .c { color: var(--muted); font-size: 15px; }
+  .meta .tag { color: var(--muted); font-size: 14px; white-space: nowrap; }
+  .meta p:empty { display: none; }
+
+  /* Contact */
+  .contact { padding-top: clamp(48px, 8vw, 112px); }
+  .contact h2 {
+    font-size: clamp(32px, 5.4vw, 72px);
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+    margin-bottom: 0;
+    text-wrap: balance;
+  }
+  .rows { margin-top: clamp(32px, 5vw, 56px); border-top: 1px solid var(--line); }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: clamp(18px, 2.3vw, 28px);
+    letter-spacing: -0.03em;
+  }
+  .row .k { color: var(--muted); font-size: 16px; letter-spacing: -0.011em; }
+  .row a { transition: color .2s; overflow-wrap: anywhere; text-align: right; }
+  .row a:hover { color: var(--blue); }
+
+  footer { padding: 56px 0 48px; color: var(--muted); font-size: 14px; }
+
+  @media (max-width: 760px) {
+    .grid { grid-template-columns: 1fr; }
+    .grid > .v { grid-column: 1 / -1 !important; }
+    .play { width: 60px; height: 60px; margin: -30px 0 0 -30px; }
+    nav { gap: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .hero > * { animation: none; }
+    .play { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#top">cuprite</a>
+    <nav aria-label="Main">
+      <a href="#work">Work</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+    <div class="hero">
+      <h1>Long-form YouTube editing.</h1>
+      <p class="lead">Premiere Pro and After Effects. Available worldwide, remotely.</p>
+      <a class="cta" href="#contact">Get in touch</a>
+    </div>
+
+    <section id="work" aria-labelledby="work-h">
+      <h2 id="work-h">Work</h2>
+      <div class="grid lead-first" id="long"></div>
+      <noscript><p class="c">Enable JavaScript to watch the videos, or write to holycuprite@gmail.com.</p></noscript>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-h">
+      <h2 id="contact-h">Let's talk about your next video.</h2>
+      <div class="rows">
+        <div class="row"><span class="k">Email</span><a href="mailto:holycuprite@gmail.com">holycuprite@gmail.com</a></div>
+        <div class="row"><span class="k">X</span><a href="https://x.com/cupritemov" target="_blank" rel="noopener">@cupritemov</a></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">© <span id="y">2026</span> cuprite</div>
+</footer>
+
+<script>
+/*
+  HOW TO EDIT
+  Each video is one line. "id" is the part of the YouTube link after v= (or after youtu.be/).
+  Title and channel name are pulled from YouTube automatically.
+  To set them by hand, add: title: "My title", channel: "Channel name"
+  To start a video at a given second, add: start: 117
+*/
+const VIDEOS = [
+  { id: "yTYNCaPAHHg" },
+  { id: "PLKXhc4howk" },
+  // { id: "NEW_VIDEO_ID" },   // <- the next video from the client goes here
+  { id: "2Qni_OL--WY" },
+  { id: "UaNWbho85gE" },
+];
+
+function makeCard(v, tagText) {
+  const el = document.createElement("article");
+  el.className = "v";
+  el.innerHTML =
+    '<div class="frame">' +
+      '<button type="button" aria-label="Play video">' +
+        '<img alt="" loading="lazy" decoding="async">' +
+        '<span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17l14-8.5z"/></svg></span>' +
+      '</button>' +
+    '</div>' +
+    '<div class="meta"><div><p class="t"></p><p class="c"></p></div><p class="tag"></p></div>';
+
+  const frame = el.querySelector(".frame");
+  const btn = el.querySelector("button");
+  const img = el.querySelector("img");
+  const t = el.querySelector(".t");
+  const c = el.querySelector(".c");
+  el.querySelector(".tag").textContent = tagText;
+  if (v.title) t.textContent = v.title;
+  if (v.channel) c.textContent = v.channel;
+
+  // Thumbnail: use the HD one, fall back if it does not exist
+  const hi = "https://i.ytimg.com/vi/" + v.id + "/maxresdefault.jpg";
+  const mid = "https://i.ytimg.com/vi/" + v.id + "/hqdefault.jpg";
+  img.onload = function () { if (img.naturalWidth < 400 && img.src !== mid) img.src = mid; };
+  img.onerror = function () { if (img.src !== mid) img.src = mid; };
+  img.src = hi;
+
+  // Click-to-load player (nothing from YouTube loads until the visitor presses play)
+  btn.addEventListener("click", function () {
+    const f = document.createElement("iframe");
+    f.src = "https://www.youtube-nocookie.com/embed/" + v.id +
+            "?autoplay=1&rel=0&modestbranding=1&playsinline=1" + (v.start ? "&start=" + v.start : "");
+    f.title = t.textContent || "Video";
+    f.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen";
+    f.allowFullscreen = true;
+    f.referrerPolicy = "strict-origin-when-cross-origin";
+    frame.replaceChildren(f);
+  });
+
+  // Auto-fill title and channel from YouTube when not set by hand
+  if (!v.title || !v.channel) {
+    fetch("https://www.youtube.com/oembed?format=json&url=" +
+          encodeURIComponent("https://www.youtube.com/watch?v=" + v.id))
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d) return;
+        if (!v.title && d.title) { t.textContent = d.title; btn.setAttribute("aria-label", "Play: " + d.title); }
+        if (!v.channel && d.author_name) c.textContent = d.author_name;
+      })
+      .catch(function () {});
+  }
+  return el;
+}
+
+function render(list, targetId, tagText) {
+  const target = document.getElementById(targetId);
+  list.forEach(function (v) { target.appendChild(makeCard(v, tagText)); });
+}
+
+render(VIDEOS, "long", "");
+document.getElementById("y").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
